@@ -20,11 +20,15 @@ program.on('--help', function(){
 
 program.parse(process.argv);
 
-if (!program.args.length) {
+if (!program.args.length) { // called w/o any arguments
     program.help(); // process.exit() is implicit
 }
 
-if (program.args[0].indexOf(':')) {
+if (program.args[0].indexOf(':')) { // called with lang:lang
+    if (program.args.length == 1) { // called only w/ lang:lang
+        program.help();
+    }
+
     langs = program.args.shift().split(':');
     program.from = langs[0];
     program.to = langs[1];
