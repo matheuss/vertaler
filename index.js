@@ -21,8 +21,7 @@ program.on('--help', function(){
 program.parse(process.argv);
 
 if (!program.args.length) {
-    console.error('What do you want to translate? Try vertaler --help');
-    process.exit();
+    program.help(); // process.exit() is implicit
 }
 
 if (program.args[0].indexOf(':')) {
