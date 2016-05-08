@@ -1,0 +1,25 @@
+{
+  "name": "vertaler",
+  "version": "0.1.0",
+  "description": "Translate texts in your command line with Google Translate",
+  "license": "MIT",
+  "author": {
+    "name": "Matheus Fernandes",
+    "email": "npm@matheus.top",
+    "url": "http://matheus.top"
+  },
+  "main": "index.js",
+  "bin": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matheuss/vertaler.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "configstore": "^2.0.0",
+    "request": "^2.72.0"
+  }
+}
