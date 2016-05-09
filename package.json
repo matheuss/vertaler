@@ -1,6 +1,6 @@
 {
   "name": "vertaler",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Translate texts in your command line with Google Translate",
   "license": "MIT",
   "author": {
@@ -20,6 +20,7 @@
   "dependencies": {
     "commander": "^2.9.0",
     "configstore": "^2.0.0",
+    "insight": "^0.8.1",
     "request": "^2.72.0"
   },
   "keywords": [
