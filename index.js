@@ -10,7 +10,7 @@ var api = require('./api'),
 if (updateNotifier.update) {
     var update = updateNotifier.update;
     var message = boxen('Update available! ' + chalk.red(update.current) + ' → '
-        + chalk.green(update.latest) + ' \nRun ' + chalk.magenta('npm i -g vertler') + ' to update :)', {
+        + chalk.green(update.latest) + ' \nRun ' + chalk.magenta('npm i -g vertaler') + ' to update :)', {
         padding: 1,
         margin: 1,
         borderColor: 'green',
