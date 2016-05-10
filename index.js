@@ -2,7 +2,35 @@
 var api = require('./api'),
     program = require('commander'),
     pkg = require('./package.json'),
-    analytics = require('./analytics');
+    analytics = require('./analytics'),
+    updateNotifier = require('update-notifier')({pkg: pkg}),
+    boxen = require('boxen'),
+    chalk = require('chalk');
+
+if (updateNotifier.update) {
+    var update = updateNotifier.update;
+    var message = boxen('Update available! ' + chalk.red(update.current) + ' → '
+        + chalk.green(update.latest) + ' \nRun ' + chalk.magenta('npm i -g vertler') + ' to update :)', {
+        padding: 1,
+        margin: 1,
+        borderColor: 'green',
+        borderStyle: {
+            topLeft: '.',
+            topRight: '.',
+            bottomLeft: '\'',
+            bottomRight: '\'',
+            horizontal: '-',
+            vertical: '|'
+        }
+    });
+    process.on('exit', function () {
+        console.error(message);
+    });
+
+    process.on('SIGINT', function () {
+        console.error('\n' + message);
+    });
+}
 
 analytics.init(function () {
     program

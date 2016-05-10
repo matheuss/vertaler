@@ -1,6 +1,6 @@
 {
   "name": "vertaler",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Translate texts in your command line with Google Translate",
   "license": "MIT",
   "author": {
@@ -18,10 +18,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "boxen": "^0.5.1",
+    "chalk": "^1.1.3",
     "commander": "^2.9.0",
     "configstore": "^2.0.0",
     "insight": "^0.8.1",
-    "request": "^2.72.0"
+    "request": "^2.72.0",
+    "update-notifier": "^0.7.0"
   },
   "keywords": [
     "translate",
