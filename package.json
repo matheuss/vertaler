@@ -15,7 +15,7 @@
     "url": "https://github.com/matheuss/vertaler.git"
   },
   "scripts": {
-    "test": "ava"
+    "test": "xo && ava"
   },
   "dependencies": {
     "boxen": "^0.5.1",
@@ -36,6 +36,11 @@
   ],
   "devDependencies": {
     "ava": "^0.14.0",
-    "execa": "^0.4.0"
+    "execa": "^0.4.0",
+    "xo": "^0.15.0"
+  },
+  "xo": {
+    "space": 4,
+    "esnext": true
   }
 }

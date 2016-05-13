@@ -1,16 +1,19 @@
 #!/usr/bin/env node
-var translate = require('google-translate-api'),
-    program = require('commander'),
-    pkg = require('./package.json'),
-    analytics = require('./analytics'),
-    updateNotifier = require('update-notifier')({pkg: pkg}),
-    boxen = require('boxen'),
-    chalk = require('chalk');
+'use strict';
+const boxen = require('boxen');
+const chalk = require('chalk');
+const program = require('commander');
+const translate = require('google-translate-api');
+const updateNotifier = require('update-notifier');
 
-if (updateNotifier.update) {
-    var update = updateNotifier.update;
-    var message = boxen('Update available! ' + chalk.red(update.current) + ' → '
-        + chalk.green(update.latest) + ' \nRun ' + chalk.magenta('npm i -g vertaler') + ' to update :)', {
+const pkg = require('./package.json');
+const analytics = require('./analytics');
+
+const notifier = updateNotifier({pkg});
+
+if (notifier.update) {
+    const update = notifier.update;
+    const message = boxen(`Update available! ${chalk.red(update.current)} → ${chalk.green(update.latest)} \nRun ${chalk.magenta('npm i -g vertaler')} to update :)`, {
         padding: 1,
         margin: 1,
         borderColor: 'green',
@@ -23,23 +26,23 @@ if (updateNotifier.update) {
             vertical: '|'
         }
     });
-    process.on('exit', function () {
+    process.on('exit', () => {
         console.error(message);
     });
 
-    process.on('SIGINT', function () {
-        console.error('\n' + message);
+    process.on('SIGINT', () => {
+        console.error(`\n${message}`);
     });
 }
 
-analytics.init(function () {
+analytics.init(() => {
     program
         .version(pkg.version)
         .usage('<options | <sourceLang>:targetLang> <text>')
         .option('-f, --from <value>', 'Source language', 'en')
         .option('-t, --to <value>', 'Target language', 'nl');
 
-    program.on('--help', function () {
+    program.on('--help', () => {
         console.log('  Examples:');
         console.log('');
         console.log('    $ vertaler en:nl Hi');
@@ -55,34 +58,33 @@ analytics.init(function () {
         program.help(); // process.exit() is implicit
     }
 
-    if (program.args[0].indexOf(':') != -1) {
-        if (program.args.length == 1) { // no text to translate
+    if (program.args[0].indexOf(':') !== -1) {
+        if (program.args.length === 1) { // no text to translate
             program.help();
         }
 
-        var langs = program.args.shift().split(':');
+        const langs = program.args.shift().split(':');
 
-        if (langs[0] == '') { // ':en': translate from auto to english
+        if (langs[0] === '') { // ':en': translate from auto to english
             program.from = 'auto';
             program.to = langs[1];
-        } else if (langs[1] == '') { // 'en:' translate from english to ?
+        } else if (langs[1] === '') { // 'en:' translate from english to ?
             program.help();
         } else {
             program.from = langs[0];
             program.to = langs[1];
         }
-
     }
 
     analytics.track('translate', program.from, program.to);
-    translate(program.from, program.to, program.args.join(' '), function (err, text) {
+    translate(program.from, program.to, program.args.join(' '), (err, text) => {
         if (err) {
-            var msg = '';
-            if (err.code == 'BAD_REQUEST') {
+            let msg = '';
+            if (err.code === 'BAD_REQUEST') {
                 msg = chalk.red('Ops. Our code is no longer working – Google servers are rejecting our requests.\n' +
                     'Feel free to open an issue @ https://git.io/g-trans-api');
-            } else if (err.code == 'BAD_NETWORK') {
-                msg = chalk.red('Please check your internet connection.')
+            } else if (err.code === 'BAD_NETWORK') {
+                msg = chalk.red('Please check your internet connection.');
             }
 
             console.error(msg);

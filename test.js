@@ -2,13 +2,13 @@
  * Created by matheus on 5/13/16.
  */
 
+import execa from 'execa';
 import test from 'ava';
-import execa from 'execa'
 
 test('show help when called w/o any arguments', async t => {
     const ret = await execa('./index.js');
 
-    t.regex(ret.stdout, /Usage/)
+    t.regex(ret.stdout, /Usage/);
 });
 
 test('translate from english to dutch using options', async t => {

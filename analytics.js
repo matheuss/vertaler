@@ -2,14 +2,14 @@
  * Created by matheus on 5/9/16.
  */
 
-var Insight = require('insight');
-var pkg = require('./package.json');
+const Insight = require('insight');
+const pkg = require('./package.json');
 
-var insight = new Insight({
+const insight = new Insight({
     trackingCode: 'UA-75832795-5',
-    pkg: pkg
+    pkg
 });
-module.exports.init = function (callback) {
+module.exports.init = callback => {
     if (insight.optOut === undefined) {
         insight.track('downloaded');
         insight.askPermission(null, callback);
@@ -18,6 +18,6 @@ module.exports.init = function (callback) {
     }
 };
 
-module.exports.track = function track() {
+module.exports.track = () => {
     insight.track(Array.from(arguments).join('/'));
 };
