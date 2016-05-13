@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var api = require('./api'),
+var translate = require('google-translate-api'),
     program = require('commander'),
     pkg = require('./package.json'),
     analytics = require('./analytics'),
@@ -73,6 +73,22 @@ analytics.init(function () {
         }
 
     }
+
     analytics.track('translate', program.from, program.to);
-    api.translate(program.args.join(' '), program.from, program.to, console.log);
+    translate(program.from, program.to, program.args.join(' '), function (err, text) {
+        if (err) {
+            var msg = '';
+            if (err.code == 'BAD_REQUEST') {
+                msg = chalk.red('Ops. Our code is no longer working – Google servers are rejecting our requests.\n' +
+                    'Feel free to open an issue @ https://git.io/g-trans-api');
+            } else if (err.code == 'BAD_NETWORK') {
+                msg = chalk.red('Please check your internet connection.')
+            }
+
+            console.error(msg);
+            process.exit(1);
+        }
+
+        console.log(text);
+    });
 });
