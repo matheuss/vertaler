@@ -13,7 +13,9 @@ const notifier = updateNotifier({pkg});
 
 if (notifier.update) {
     const update = notifier.update;
-    const message = boxen(`Update available! ${chalk.red(update.current)} → ${chalk.green(update.latest)} \nRun ${chalk.magenta('npm i -g vertaler')} to update :)`, {
+    let message = `Update available! ${chalk.red(update.current)} → ${chalk.green(update.latest)} \n`;
+    message += `Run ${chalk.magenta('npm i -g vertaler')} to update :)`;
+    message = boxen(message, {
         padding: 1,
         margin: 1,
         borderColor: 'green',
