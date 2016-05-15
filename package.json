@@ -8,6 +8,9 @@
     "email": "npm@matheus.top",
     "url": "http://matheus.top"
   },
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "main": "index.js",
   "bin": "index.js",
   "repository": {
