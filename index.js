@@ -5,10 +5,11 @@ const chalk = require('chalk');
 const program = require('commander');
 const translate = require('google-translate-api');
 const updateNotifier = require('update-notifier');
+const styles = require('ansi-styles');
 
 const pkg = require('./package.json');
 const analytics = require('./analytics');
-
+const languages = require('./languages');
 const notifier = updateNotifier({pkg});
 
 if (notifier.update) {
@@ -79,20 +80,47 @@ analytics.init(() => {
     }
 
     analytics.track('translate', program.from, program.to);
-    translate(program.from, program.to, program.args.join(' '), (err, text) => {
-        if (err) {
-            let msg = '';
-            if (err.code === 'BAD_REQUEST') {
-                msg = chalk.red('Ops. Our code is no longer working – Google servers are rejecting our requests.\n' +
-                    'Feel free to open an issue @ https://git.io/g-trans-api');
-            } else if (err.code === 'BAD_NETWORK') {
-                msg = chalk.red('Please check your internet connection.');
-            }
+    translate(program.args.join(' '), {from: program.from, to: program.to}).then(res => {
+        let msg = '';
 
-            console.error(msg);
-            process.exit(1);
+        if (res.from.corrected) {
+            msg = `${chalk.bold('Translated from')} ${chalk.green.bold(languages[res.from.iso])}`;
         }
 
-        console.log(text);
+        if (res.text.corrected) {
+            let str = '';
+            if (chalk.supportsColor) {
+                str = res.text.correction.replace(/\[/g, styles.bold.open + styles.green.open);
+                str = str.replace(/]/g, styles.bold.close + styles.green.close);
+            } else {
+                str = res.text.correction.replace(/\[/g, '');
+                str = str.replace(/]/g, '');
+            }
+
+            if (msg === '') {
+                msg += `${chalk.bold('Auto corrected to:')} ${str}`;
+            } else {
+                msg += `${chalk.bold(' and auto corrected to:')} ${str}`;
+            }
+        }
+
+        if (msg !== '') {
+            msg += '\n';
+        }
+
+        msg += res.text.value;
+
+        console.log(msg);
+    }).catch(err => {
+        let msg = '';
+        if (err.code === 'BAD_REQUEST') {
+            msg = chalk.red('Ops. Our code is no longer working – Google servers are rejecting our requests.\n' +
+                'Feel free to open an issue @ https://git.io/g-trans-api');
+        } else if (err.code === 'BAD_NETWORK') {
+            msg = chalk.red('Please check your internet connection.');
+        }
+
+        console.error(msg);
+        process.exit(1);
     });
 });
