@@ -40,3 +40,5 @@ jspm_packages
 
 links.txt
 tmp
+
+.DS_Store
