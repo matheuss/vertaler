@@ -83,32 +83,39 @@ analytics.init(() => {
     translate(program.args.join(' '), {from: program.from, to: program.to}).then(res => {
         let msg = '';
 
-        if (res.from.corrected) {
-            msg = `${chalk.bold('Translated from')} ${chalk.green.bold(languages[res.from.iso])}`;
+        if (res.from.language.didYouMean) {
+            msg = `${chalk.bold('Did you mean to translate from ')}`;
+            msg += `${chalk.green.bold(languages[res.from.language.iso])}${chalk.bold('?')}`;
         }
 
-        if (res.text.corrected) {
-            let str = '';
+        let correctedSpelling = '';
+        if (res.from.text.value !== '') {
             if (chalk.supportsColor) {
-                str = res.text.correction.replace(/\[/g, styles.bold.open + styles.green.open);
-                str = str.replace(/]/g, styles.bold.close + styles.green.close);
+                correctedSpelling = res.from.text.value.replace(/\[/g, styles.bold.open + styles.green.open);
+                correctedSpelling = correctedSpelling.replace(/]/g, styles.bold.close + styles.green.close);
             } else {
-                str = res.text.correction.replace(/\[/g, '');
-                str = str.replace(/]/g, '');
+                correctedSpelling = res.from.text.value.replace(/\[/g, '');
+                correctedSpelling = correctedSpelling.replace(/]/g, '');
             }
+        }
 
-            if (msg === '') {
-                msg += `${chalk.bold('Auto corrected to:')} ${str}`;
-            } else {
-                msg += `${chalk.bold(' and auto corrected to:')} ${str}`;
+        if (res.from.text.autoCorrected) {
+            if (msg !== '') {
+                msg += '\n';
             }
+            msg += `${chalk.bold('Auto corrected to:')} ${correctedSpelling}`;
+        } else if (res.from.text.didYouMean) {
+            if (msg !== '') {
+                msg += '\n';
+            }
+            msg += `${chalk.bold('Did you mean:')} ${correctedSpelling}`;
         }
 
         if (msg !== '') {
             msg += '\n';
         }
 
-        msg += res.text.value;
+        msg += res.text;
 
         console.log(msg);
     }).catch(err => {
