@@ -41,8 +41,6 @@ if (notifier.update) {
 }
 
 analytics.init(() => {
-    spinner.start();
-
     program
         .version(pkg.version)
         .usage('<options | <sourceLang>:targetLang> <text>')
@@ -83,6 +81,7 @@ analytics.init(() => {
         }
     }
 
+    spinner.start();
     analytics.track('translate', program.from, program.to);
     translate(program.args.join(' '), {from: program.from, to: program.to}).then(res => {
         let msg = '';

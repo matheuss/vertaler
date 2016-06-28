@@ -1,6 +1,6 @@
 {
   "name": "vertaler",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Translate texts in your command line with Google Translate",
   "license": "MIT",
   "author": {
