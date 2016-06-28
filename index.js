@@ -6,11 +6,13 @@ const program = require('commander');
 const translate = require('google-translate-api');
 const updateNotifier = require('update-notifier');
 const styles = require('ansi-styles');
+const ora = require('ora');
 
 const pkg = require('./package.json');
 const analytics = require('./analytics');
 const languages = require('./languages');
 const notifier = updateNotifier({pkg});
+const spinner = ora('Translating...');
 
 if (notifier.update) {
     const update = notifier.update;
@@ -39,6 +41,8 @@ if (notifier.update) {
 }
 
 analytics.init(() => {
+    spinner.start();
+
     program
         .version(pkg.version)
         .usage('<options | <sourceLang>:targetLang> <text>')
@@ -82,6 +86,8 @@ analytics.init(() => {
     analytics.track('translate', program.from, program.to);
     translate(program.args.join(' '), {from: program.from, to: program.to}).then(res => {
         let msg = '';
+
+        spinner.stop();
 
         if (res.from.language.didYouMean) {
             msg = `${chalk.bold('Did you mean to translate from ')}`;
