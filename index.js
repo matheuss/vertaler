@@ -2,16 +2,17 @@
 'use strict';
 const boxen = require('boxen');
 const chalk = require('chalk');
+const ora = require('ora');
 const program = require('commander');
+const styles = require('ansi-styles');
 const translate = require('google-translate-api');
 const updateNotifier = require('update-notifier');
-const styles = require('ansi-styles');
-const ora = require('ora');
 
 const pkg = require('./package.json');
 const analytics = require('./analytics');
 const languages = require('./languages');
 const notifier = updateNotifier({pkg});
+
 const spinner = ora('Translating...');
 
 if (notifier.update) {
