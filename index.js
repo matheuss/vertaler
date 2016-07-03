@@ -52,7 +52,8 @@ analytics.init(() => {
         console.log('  Examples:');
         console.log('');
         console.log('    $ vertaler en:nl Hi');
-        console.log('    $ vertaler :en Hoi (automatic source lang detection)');
+        console.log('    $ vertaler :en Hoi');
+        console.log('               └── automatic source lang detection');
         console.log('    $ vertaler -f en -t nl Hi');
         console.log('    $ vertaler --from en --to nl Hi');
         console.log('');
