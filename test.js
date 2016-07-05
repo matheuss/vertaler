@@ -1,7 +1,3 @@
-/**
- * Created by matheus on 5/13/16.
- */
-
 import execa from 'execa';
 import test from 'ava';
 
