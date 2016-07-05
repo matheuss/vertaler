@@ -30,7 +30,8 @@
     "insight": "^0.8.1",
     "ora": "^0.2.3",
     "request": "^2.72.0",
-    "update-notifier": "^0.7.0"
+    "update-notifier": "^0.7.0",
+    "vorpal": "^1.11.2"
   },
   "keywords": [
     "translate",
