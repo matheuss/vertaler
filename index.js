@@ -8,6 +8,8 @@ const styles = require('ansi-styles');
 const translate = require('google-translate-api');
 const updateNotifier = require('update-notifier');
 
+const interactive = require('./interactive');
+
 const pkg = require('./package.json');
 const analytics = require('./analytics');
 const languages = require('./languages');
@@ -46,7 +48,8 @@ analytics.init(() => {
         .version(pkg.version)
         .usage('<options | <sourceLang>:targetLang> <text>')
         .option('-f, --from <value>', 'Source language', 'en')
-        .option('-t, --to <value>', 'Target language', 'nl');
+        .option('-t, --to <value>', 'Target language', 'nl')
+        .option('-i , --interactive', 'Interactive mode', false);
 
     program.on('--help', () => {
         console.log('  Examples:');
@@ -61,12 +64,12 @@ analytics.init(() => {
 
     program.parse(process.argv);
 
-    if (!program.args.length) { // called w/o any arguments
+    if (!program.args.length && !program.interactive) { // called w/o any arguments
         program.help(); // process.exit() is implicit
     }
 
-    if (program.args[0].indexOf(':') !== -1) {
-        if (program.args.length === 1) { // no text to translate
+    if (program.args[0] && program.args[0].indexOf(':') !== -1) {
+        if (program.args.length === 1 && !program.interactive) { // no text to translate
             program.help();
         }
 
@@ -81,6 +84,10 @@ analytics.init(() => {
             program.from = langs[0];
             program.to = langs[1];
         }
+    }
+
+    if (program.interactive) {
+        return interactive(program);
     }
 
     spinner.start();
