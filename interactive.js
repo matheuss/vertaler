@@ -1,6 +1,9 @@
 'use strict';
 
+const translate = require('google-translate-api');
 const vorpal = require('vorpal')();
+
+const languages = require('./languages');
 
 /**
  * Clears the screen
@@ -21,6 +24,13 @@ const onKeyPress = obj => {
 
 /**
  *
+ * @param lang the ISO 639-1 code of the desired language
+ * @returns {Vorpal}
+ */
+const setDelimiterLang = lang => vorpal.delimiter(`${languages[lang]}>`);
+
+/**
+ *
  * @param program the commander.js program
  */
 const interactive = program => {
@@ -31,15 +41,38 @@ const interactive = program => {
         });
 
     vorpal
-        .catch('[langs][text...]')
+        .catch('[text...]')
         .action((command, callback) => {
-            vorpal.log(command);
-            callback();
+            let text = command.text.join(' ');
+            if (text.charAt(2) === ':') { // 'en:pt' or 'en:pt test'
+                let langs = text.substring(0, 5);
+                langs = langs.split(':');
+
+                program.from = langs[0];
+                program.to = langs[1];
+
+                setDelimiterLang(program.from);
+
+                text = text.substring(6);
+            }
+
+            if (text) {
+                translate(command.text.join(' '), {from: program.from, to: program.to}).then(res => {
+                    vorpal.log(res.text);
+                    callback();
+                }).catch(err => {
+                    vorpal.log(err);
+                    callback();
+                });
+            } else {
+                callback();
+            }
         });
 
     vorpal.on('keypress', onKeyPress);
 
-    vorpal.delimiter('>').show();
+    setDelimiterLang(program.from);
+    vorpal.show();
 };
 
 module.exports = interactive;
