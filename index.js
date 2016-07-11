@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 'use strict';
-const boxen = require('boxen');
 const chalk = require('chalk');
 const ora = require('ora');
 const program = require('commander');
@@ -21,7 +20,7 @@ if (notifier.update) {
     const update = notifier.update;
     let message = `Update available! ${chalk.red(update.current)} → ${chalk.green(update.latest)} \n`;
     message += `Run ${chalk.magenta('npm i -g vertaler')} to update :)`;
-    message = boxen(message, {
+    const boxenOpts = {
         padding: 1,
         margin: 1,
         borderColor: 'green',
@@ -33,14 +32,8 @@ if (notifier.update) {
             horizontal: '-',
             vertical: '|'
         }
-    });
-    process.on('exit', () => {
-        console.error(message);
-    });
-
-    process.on('SIGINT', () => {
-        console.error(`\n${message}`);
-    });
+    };
+    notifier.notify({message, boxenOpts});
 }
 
 analytics.init(() => {
