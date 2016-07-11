@@ -62,7 +62,7 @@ const interactive = program => {
                         vorpal.activeCommand.log(res.text);
                         resolve(res.text);
                     }).catch(err => {
-                        if (err.code == 'BAD_NETWORK') {
+                        if (err.code === 'BAD_NETWORK') {
                             vorpal.activeCommand.log('Please check your internet connection');
                             reject('Please check your internet connection');
                         } else { // TODO
@@ -71,9 +71,8 @@ const interactive = program => {
                         }
                     });
                 });
-            } else {
-                callback();
             }
+            callback();
         });
 
     vorpal.on('keypress', onKeyPress);
