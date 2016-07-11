@@ -57,12 +57,19 @@ const interactive = program => {
             }
 
             if (text) {
-                translate(command.text.join(' '), {from: program.from, to: program.to}).then(res => {
-                    vorpal.log(res.text);
-                    callback();
-                }).catch(err => {
-                    vorpal.log(err);
-                    callback();
+                return new Promise((resolve, reject) => {
+                    translate(command.text.join(' '), {from: program.from, to: program.to}).then(res => {
+                        vorpal.activeCommand.log(res.text);
+                        resolve(res.text);
+                    }).catch(err => {
+                        if (err.code == 'BAD_NETWORK') {
+                            vorpal.activeCommand.log('Please check your internet connection');
+                            reject('Please check your internet connection');
+                        } else { // TODO
+                            vorpal.activeCommand.log('Unknown error');
+                            reject('Unknown error');
+                        }
+                    });
                 });
             } else {
                 callback();
@@ -70,9 +77,10 @@ const interactive = program => {
         });
 
     vorpal.on('keypress', onKeyPress);
-
     setDelimiterLang(program.from);
     vorpal.show();
+
+    return vorpal;
 };
 
 module.exports = interactive;
