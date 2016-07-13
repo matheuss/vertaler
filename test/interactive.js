@@ -1,4 +1,5 @@
 import test from 'ava';
+
 const interactive = require('../interactive')({from: 'en', to: 'pt'});
 
 test('translate some text from english to portuguese', async t => {

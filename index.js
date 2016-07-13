@@ -12,8 +12,8 @@ const interactive = require('./interactive');
 const pkg = require('./package.json');
 const analytics = require('./analytics');
 const languages = require('./languages');
-const notifier = updateNotifier({pkg});
 
+const notifier = updateNotifier({pkg});
 const spinner = ora('Translating...');
 
 if (notifier.update) {
