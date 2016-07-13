@@ -134,6 +134,7 @@ analytics.init(() => {
             msg = chalk.red('Please check your internet connection.');
         }
 
+        spinner.stop();
         console.error(msg);
         process.exit(1);
     });
