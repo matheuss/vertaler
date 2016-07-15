@@ -8,16 +8,16 @@ test('parse langs from \'en:nl\'', t => {
     t.is(result.to, 'nl');
 });
 
-test('parse langs from \'zh-CN:en\'', t => {
-    const result = parseLanguages('zh-CN:en');
-    t.is(result.from, 'zh-CN');
+test('parse langs from \'zh-cn:en\'', t => {
+    const result = parseLanguages('zh-cn:en');
+    t.is(result.from, 'zh-cn');
     t.is(result.to, 'en');
 });
 
-test('parse langs from \'en:zh-TW\'', t => {
-    const result = parseLanguages('en:zh-TW');
+test('parse langs from \'en:zh-tw\'', t => {
+    const result = parseLanguages('en:zh-tw');
     t.is(result.from, 'en');
-    t.is(result.to, 'zh-TW');
+    t.is(result.to, 'zh-tw');
 });
 
 test('parse langs from \'en:nl some text here\'', t => {

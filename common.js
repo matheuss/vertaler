@@ -1,4 +1,4 @@
-
+const translate = require('google-translate-api');
 /**
  * The parsed languages
  * @typedef ParsedLanguages
@@ -27,6 +27,12 @@ function parseLanguages(str) {
         if (match[5]) {
             result.to += match[5] + match[6];
         }
+    }
+    if (result.from) {
+        result.from = translate.languages.getCode(result.from);
+    }
+    if (result.to) {
+        result.to = translate.languages.getCode(result.to);
     }
 
     return result;
