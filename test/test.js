@@ -1,10 +1,8 @@
 import execa from 'execa';
 import test from 'ava';
 
-test('show help when called w/o any arguments', async t => {
-    const ret = await execa('../index.js');
-
-    t.regex(ret.stdout, /Usage/);
+test('show error when called w/o any arguments', async t => {
+    t.throws(execa('../index.js'), /Missing arguments/);
 });
 
 test('translate from english to dutch using options', async t => {
@@ -32,7 +30,5 @@ test('translate from auto to dutch using colon notation', async t => {
 });
 
 test('show help when trying to translate from english to ?', async t => {
-    const ret = await execa('../index.js', ['en:', 'translator']);
-
-    t.regex(ret.stdout, /Usage/);
+    t.throws(execa('../index.js', ['en:', 'translator']), /Missing\/invalid target language/);
 });

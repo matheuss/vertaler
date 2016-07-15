@@ -7,6 +7,7 @@ const styles = require('ansi-styles');
 const translate = require('google-translate-api');
 const updateNotifier = require('update-notifier');
 
+const common = require('./common');
 const interactive = require('./interactive');
 
 const pkg = require('./package.json');
@@ -40,8 +41,8 @@ analytics.init(() => {
     program
         .version(pkg.version)
         .usage('<options | <sourceLang>:targetLang> <text>')
-        .option('-f, --from <value>', 'Source language', 'en')
-        .option('-t, --to <value>', 'Target language', 'nl')
+        .option('-f, --from <value>', 'Source language', 'auto')
+        .option('-t, --to <value>', 'Target language', undefined)
         .option('-i , --interactive', 'Interactive mode', false);
 
     program.on('--help', () => {
@@ -57,30 +58,23 @@ analytics.init(() => {
 
     program.parse(process.argv);
 
-    if (!program.args.length && !program.interactive) { // called w/o any arguments
-        program.help(); // process.exit() is implicit
-    }
-
-    if (program.args[0] && program.args[0].indexOf(':') !== -1) {
-        if (program.args.length === 1 && !program.interactive) { // no text to translate
-            program.help();
-        }
-
-        const langs = program.args.shift().split(':');
-
-        if (langs[0] === '') { // ':en': translate from auto to english
-            program.from = 'auto';
-            program.to = langs[1];
-        } else if (langs[1] === '') { // 'en:' translate from english to ?
-            program.help();
-        } else {
-            program.from = langs[0];
-            program.to = langs[1];
-        }
-    }
-
     if (program.interactive) {
         return interactive(program);
+    }
+    if (!program.args.length) { // called w/o any arguments
+        console.log(chalk.red('Missing arguments. See \'vertaler --help\''));
+        process.exit(1);
+    }
+    if (!program.to) { // program.from is 'auto' by default, so does not need to be checked
+        Object.assign(program, common.parseLanguages(program.args.shift()));
+        if (!program.to) {
+            console.log(chalk.red('Missing/invalid target language. See \'vertaler --help\''));
+            process.exit(1);
+        }
+    }
+    if (!program.args.length) {
+        console.log(chalk.red('There\'s nothing to translate. See \'vertaler --help\''));
+        process.exit(1);
     }
 
     spinner.start();
